@@ -54,9 +54,16 @@ function createDOMNodes(page) {
 
     const saveText = document.createElement('p')
     saveText.classList.add('clickable')
-    saveText.textContent = 'Add to favorites'
+    if (page === 'favorites') {
+      saveText.textContent = "Delete Item"
+      saveText.setAttribute('onclick', `deleteFavorite('${result.url}')`)
+    } else {
+      saveText.textContent = 'Add to favorites'
 
-    saveText.setAttribute('onclick', `saveFavorite('${result.url}')`)
+      saveText.setAttribute('onclick', `saveFavorite('${result.url}')`)
+
+    }
+
 
     // Card Text
     const cardText = document.createElement('p')
@@ -96,6 +103,16 @@ function createDOMNodes(page) {
 
 }
 
+function deleteFavorite(url) {
+
+  if (favorites[url]) {
+    delete favorites[url];
+    localStorage.setItem('nasafavorites', JSON.stringify(favorites))
+  }
+  updateDom('favorites')
+
+}
+
 function updateDom(page) {
   // GET favorites from localstorage
 
@@ -103,6 +120,7 @@ function updateDom(page) {
     favorites = JSON.parse(localStorage.getItem('nasafavorites'));
     console.log('favorites from local storage', favorites);
   }
+  imagesContainer.textContent = ''
   createDOMNodes(page)
 
 }
