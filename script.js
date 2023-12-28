@@ -19,9 +19,12 @@ let favorites = {}
 
 //update DOM
 
-function updateDom() {
 
-  resultsArray.forEach((result) => {
+function createDOMNodes(page) {
+
+  let currentArray = page === 'results' ? resultsArray : Object.values(favorites)
+
+  currentArray.forEach((result) => {
     //card
     const card = document.createElement('div')
     card.classList.add('card')
@@ -93,6 +96,17 @@ function updateDom() {
 
 }
 
+function updateDom(page) {
+  // GET favorites from localstorage
+
+  if (localStorage.getItem('nasafavorites')) {
+    favorites = JSON.parse(localStorage.getItem('nasafavorites'));
+    console.log('favorites from local storage', favorites);
+  }
+  createDOMNodes(page)
+
+}
+
 // saveFavorite 
 
 function saveFavorite(itemUrl) {
@@ -106,7 +120,7 @@ function saveFavorite(itemUrl) {
         savedConfirmed.hidden = true
       }, 2000)
       // save to local storage
-      localStorage.setItem('nasaFavorite', JSON.stringify(favorites))
+      localStorage.setItem('nasafavorites', JSON.stringify(favorites))
     }
   })
 
@@ -124,7 +138,7 @@ async function getNasaPictures() {
 
     console.log(resultsArray);
 
-    updateDom();
+    updateDom("favorites");
   } catch (error) {
 
   }
